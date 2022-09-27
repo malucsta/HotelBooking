@@ -1,12 +1,20 @@
+using Application;
+using Application.Guest.Ports;
 using Data;
+using Data.Guest;
+using Domain.Ports;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
+//IoC
+builder.Services.AddScoped<IGuestRepository, GuestRepository>();
+builder.Services.AddScoped<IGuestManager, GuestManager>(); 
+
+//DbConnection
 var connectionString = builder.Configuration.GetConnectionString("DefautConnection");
 builder.Services.AddDbContext<HotelDbContext>(options => options.UseSqlServer(connectionString));
 

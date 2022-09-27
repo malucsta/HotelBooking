@@ -7,7 +7,7 @@ namespace Data
 {
     public class GuestConfiguration : IEntityTypeConfiguration<Entities.Guest>
     {
-        public void Configure(EntityTypeBuilder<Guest> builder)
+        public void Configure(EntityTypeBuilder<Entities.Guest> builder)
         {
             builder.HasKey(x => x.Id);
             

@@ -8,28 +8,16 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 
-namespace ApplicationTests
+namespace ApplicationTests.BookingService
 {
-    internal class FakeRepository : IGuestRepository
+    public class CreateGuestTest
     {
-        public Task<int> Create(Guest guest)
-        {
-            return Task.FromResult(123);
-        }
-
-        public Task<Guest> Get(int id)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-    public class GuestManagerTest
-    {
-        GuestManager guestManager;
+        private GuestManager guestManager;
 
         [SetUp]
         public void Setup()
         {
-            var fakeRepository = new FakeRepository();
+            var fakeRepository = new GuestFakeRepository();
             guestManager = new GuestManager(fakeRepository);
         }
 

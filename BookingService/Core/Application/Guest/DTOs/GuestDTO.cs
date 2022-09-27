@@ -27,5 +27,18 @@ namespace Application.Guest.DTOs
                 }
             };
         }
+
+        public static GuestDTO MapToDTO(Entities.Guest guest)
+        {
+            return new GuestDTO
+            {
+                Id = guest.Id,
+                Name = guest.Name,
+                Surname = guest.Surname,
+                Email = guest.Email,
+                IdNumber = guest.DocumentId.IdNumber,
+                DocumentType = (int)guest.DocumentId.DocumentType
+            };
+        }
     }
 }

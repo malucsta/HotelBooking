@@ -33,12 +33,28 @@ namespace API.Controllers
 
             if (res.ErrorCode == Application.ErrorCode.COULD_NOT_STORE_DATA || 
                 res.ErrorCode == Application.ErrorCode.MISSING_REQUIRED_INFORMATION ||
-                res.ErrorCode == Application.ErrorCode.NOT_FOUND || 
                 res.ErrorCode == Application.ErrorCode.INVALID_FIELD ||
                 res.ErrorCode == Application.ErrorCode.INVALID_PERSON_ID
                 )
             {
                 return BadRequest(res);
+            }
+
+            _logger.LogError("Unknown error occurred", res);
+            return BadRequest();
+
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<GuestDTO>> GetGuest(int guestID)
+        {
+            var res = await _guestManager.GetGuest(guestID);
+
+            if (res.Sucess) return Ok(res.Data);
+
+            if (res.ErrorCode == Application.ErrorCode.NOT_FOUND)
+            {
+                return NotFound(res);
             }
 
             _logger.LogError("Unknown error occurred", res);

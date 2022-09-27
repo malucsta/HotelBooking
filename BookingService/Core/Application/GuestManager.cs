@@ -65,5 +65,26 @@ namespace Application
                 };
             }
         }
+
+        public async Task<GuestResponse> GetGuest(int guestID)
+        {
+            var guest = await _repository.Get(guestID);
+
+            if(guest == null)
+            {
+                return new GuestResponse
+                {
+                    Sucess = false,
+                    ErrorCode = ErrorCode.NOT_FOUND,
+                    Message = "This guest doesn't exist",
+                };
+            };
+
+            return new GuestResponse
+            {
+                Data = GuestDTO.MapToDTO(guest),
+                Sucess = true,
+            };
+        }
     }
 }

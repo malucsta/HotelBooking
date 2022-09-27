@@ -55,6 +55,15 @@ namespace Application
                     Message = $"Invalid information: {e.Message}",
                 };
             }
+            catch (Exception)
+            {
+                return new GuestResponse
+                {
+                    Sucess = false,
+                    ErrorCode = ErrorCode.COULD_NOT_STORE_DATA,
+                    Message = "Something went wrong while trying to save guest to database",
+                };
+            }
         }
     }
 }

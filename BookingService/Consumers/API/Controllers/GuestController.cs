@@ -49,10 +49,10 @@ namespace API.Controllers
 
         }
 
-        [HttpGet]
-        public async Task<ActionResult<GuestDTO>> GetGuest(int guestID)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GuestDTO>> GetGuest(int id)
         {
-            var res = await _guestManager.GetGuest(guestID);
+            var res = await _guestManager.GetGuest(id);
 
             if (res.Sucess) return Ok(res.Data);
 

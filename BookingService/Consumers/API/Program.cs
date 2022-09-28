@@ -1,5 +1,6 @@
 using Application;
 using Application.Guest.Ports;
+using Application.Room.Ports;
 using Data;
 using Data.Guest;
 using Domain.Ports;
@@ -12,7 +13,8 @@ builder.Services.AddControllers();
 
 //IoC
 builder.Services.AddScoped<IGuestRepository, GuestRepository>();
-builder.Services.AddScoped<IGuestManager, GuestManager>(); 
+builder.Services.AddScoped<IGuestManager, GuestManager>();
+builder.Services.AddScoped<IRoomManager, RoomManager>();
 
 //DbConnection
 var connectionString = builder.Configuration.GetConnectionString("DefautConnection");

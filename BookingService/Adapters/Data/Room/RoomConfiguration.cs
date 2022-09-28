@@ -5,9 +5,9 @@ using Entities = Domain.Entities;
 
 namespace Data
 {
-    public class RoomConfiguration : IEntityTypeConfiguration<Room>
+    public class RoomConfiguration : IEntityTypeConfiguration<Entities.Room>
     {
-        public void Configure(EntityTypeBuilder<Room> builder)
+        public void Configure(EntityTypeBuilder<Entities.Room> builder)
         {
             builder.HasKey(x => x.Id);
 

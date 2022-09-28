@@ -8,7 +8,7 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 
-namespace ApplicationTests.BookingService
+namespace ApplicationTests.BookingService.GuestTests
 {
     public class CreateGuestTest
     {

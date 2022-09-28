@@ -59,9 +59,40 @@ namespace Application
             }
         }
 
-        public Task<RoomResponse> GetRoom(int roomID)
+        public async Task<RoomResponse> GetRoom(int roomID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var room = await _repository.Get(roomID);
+
+                if (room == null)
+                {
+                    return new RoomResponse
+                    {
+                        Sucess = false,
+                        ErrorCode = ErrorCode.ROOM_NOT_FOUND,
+                        Message = "This room does not exist"
+                    };
+                }
+
+                var roomDTO = RoomDTO.MapToDTO(room);
+
+                return new RoomResponse
+                {
+                    Sucess = true,
+                    Data = roomDTO,
+                };
+            }
+
+            catch (Exception e)
+            {
+                return new RoomResponse
+                {
+                    Sucess = false,
+                    ErrorCode = ErrorCode.UNKNOWN_ERROR,
+                    Message = "Something went wrong while trying to comunicate with database"
+                };
+            }
         }
     }
 }

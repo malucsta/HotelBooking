@@ -3,6 +3,7 @@ using Application.Guest.Ports;
 using Application.Room.Ports;
 using Data;
 using Data.Guest;
+using Data.Room;
 using Domain.Ports;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ builder.Services.AddControllers();
 
 //IoC
 builder.Services.AddScoped<IGuestRepository, GuestRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IGuestManager, GuestManager>();
 builder.Services.AddScoped<IRoomManager, RoomManager>();
 

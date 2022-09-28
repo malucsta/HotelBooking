@@ -29,17 +29,28 @@ namespace API.Controllers
 
             var res = await _roomManager.CreateRoom(request);
 
-            if (res.Sucess) return Created("", res);
+            if (res.Sucess) return Created("", res.Data);
 
-            if(res.ErrorCode == Application.ErrorCode.ROOM_MISSING_REQUIRED_INFORMATION ||
+            if (res.ErrorCode == Application.ErrorCode.ROOM_MISSING_REQUIRED_INFORMATION ||
                 res.ErrorCode == Application.ErrorCode.ROOM_INVALID_FIELD)
             {
                 return BadRequest(res);
             }
 
-            if(res.ErrorCode != Application.ErrorCode.ROOM_COULD_NOT_STORE_DATA)
+            _logger.LogError("Unknown error occurred", res);
+            return StatusCode(500, res);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<RoomDTO>> GetRoom(int id)
+        {
+            var res = await _roomManager.GetRoom(roomID);
+
+            if (res.Sucess) { return Ok(res.Data); }
+
+            if (res.ErrorCode == Application.ErrorCode.ROOM_NOT_FOUND)
             {
-                return StatusCode(500, res);
+                NotFound(res);
             }
 
             _logger.LogError("Unknown error occurred", res);

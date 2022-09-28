@@ -31,8 +31,7 @@ namespace API.Controllers
 
             if (res.Sucess) return Created("", res.Data);
 
-            if (res.ErrorCode == Application.ErrorCode.COULD_NOT_STORE_DATA || 
-                res.ErrorCode == Application.ErrorCode.MISSING_REQUIRED_INFORMATION ||
+            if (res.ErrorCode == Application.ErrorCode.MISSING_REQUIRED_INFORMATION ||
                 res.ErrorCode == Application.ErrorCode.INVALID_FIELD ||
                 res.ErrorCode == Application.ErrorCode.INVALID_PERSON_ID
                 )
@@ -40,8 +39,13 @@ namespace API.Controllers
                 return BadRequest(res);
             }
 
+            if(res.ErrorCode == Application.ErrorCode.COULD_NOT_STORE_DATA)
+            {
+                return StatusCode(500, res);
+            }
+
             _logger.LogError("Unknown error occurred", res);
-            return BadRequest();
+            return StatusCode(500, res);
 
         }
 
@@ -58,7 +62,7 @@ namespace API.Controllers
             }
 
             _logger.LogError("Unknown error occurred", res);
-            return BadRequest();
+            return StatusCode(500, res);
 
         }
 

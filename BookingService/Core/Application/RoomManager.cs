@@ -94,5 +94,41 @@ namespace Application
                 };
             }
         }
+
+        public async Task<RoomResponse> GetRoomAggregate(int roomID)
+        {
+            try
+            {
+                var room = await _repository.GetAggregate(roomID);
+
+                if (room == null)
+                {
+                    return new RoomResponse
+                    {
+                        Sucess = false,
+                        ErrorCode = ErrorCode.ROOM_NOT_FOUND,
+                        Message = "This room does not exist"
+                    };
+                }
+
+                var roomDTO = RoomDTO.MapToAggregateDTO(room);
+
+                return new RoomResponse
+                {
+                    Sucess = true,
+                    Data = roomDTO,
+                };
+            }
+
+            catch (Exception e)
+            {
+                return new RoomResponse
+                {
+                    Sucess = false,
+                    ErrorCode = ErrorCode.UNKNOWN_ERROR,
+                    Message = "Something went wrong while trying to comunicate with database"
+                };
+            }
+        }
     }
 }

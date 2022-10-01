@@ -8,5 +8,6 @@ namespace Application.Room.Ports
         Task<RoomResponse> CreateRoom(CreateRoomRequest request);
 
         Task<RoomResponse> GetRoom(int roomID);
+        Task<RoomResponse> GetRoomAggregate(int roomID);
     }
 }

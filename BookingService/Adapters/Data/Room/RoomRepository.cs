@@ -26,12 +26,19 @@ namespace Data.Room
                 .FirstOrDefaultAsync(); 
         }
 
-        public Task<Entities.Room?> GetAggregate(int id)
+        public async Task<Entities.Room?> GetAggregate(int id)
         {
-            return _context.Rooms
-                .Include(r => r.Bookings)
-                .Where(x => x.Id == id)
-                .FirstOrDefaultAsync();
+            var room = await this.Get(id);
+
+            if(room == null)
+                return null;
+
+            room.Bookings = await _context.Bookings
+                .Include(x => x.Guest)
+                .Where(booking => booking.Room.Id == id)
+                .ToListAsync();
+
+            return room;
         }
     }
 }

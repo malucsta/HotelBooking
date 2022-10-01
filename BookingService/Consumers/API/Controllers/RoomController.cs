@@ -56,5 +56,21 @@ namespace API.Controllers
             _logger.LogError("Unknown error occurred", res);
             return StatusCode(500, res);
         }
+
+        [HttpGet("{id}/Bookings")]
+        public async Task<ActionResult<RoomDTO>> GetRoomAggregate(int id)
+        {
+            var res = await _roomManager.GetRoomAggregate(id);
+
+            if (res.Sucess) { return Ok(res.Data); }
+
+            if (res.ErrorCode == Application.ErrorCode.ROOM_NOT_FOUND)
+            {
+                NotFound(res);
+            }
+
+            _logger.LogError("Unknown error occurred", res);
+            return StatusCode(500, res);
+        }
     }
 }

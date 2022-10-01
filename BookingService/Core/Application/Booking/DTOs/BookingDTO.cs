@@ -37,9 +37,9 @@ namespace Application.Booking.DTOs
             return new BookingDTO
             {
                 Id = booking.Id,
-                PlacedAt = booking.PlacedAt,
-                Start = booking.Start,
-                End = booking.End,
+                PlacedAt = booking.PlacedAt.ToLocalTime(),
+                Start = booking.Start.ToLocalTime(),
+                End = booking.End.ToLocalTime(),
                 RoomId = booking.Room.Id,
                 GuestId = booking.Guest.Id,
             };

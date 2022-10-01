@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Application.Booking.DTOs;
+using Domain.Enums;
 using Domain.ValueObjects;
 using Entities = Domain.Entities;
 
@@ -15,6 +16,8 @@ namespace Application.Room.DTOs
         public decimal Value { get; set; }
 
         public AcceptedCurrencies Currency { get; set; }
+
+        public ICollection<BookingDTO>? Bookings { get; set; }
 
         public static Entities.Room MapToEntity(RoomDTO roomDTO)
         {
@@ -42,6 +45,26 @@ namespace Application.Room.DTOs
                 InMantainance = room.InMantainance,
                 Value = room.Price.Value,
                 Currency = room.Price.Currency,
+            };
+        }
+
+        public static RoomDTO MapToAggregateDTO(Entities.Room room)
+        {
+            ICollection<BookingDTO> bookingsDTOs = new List<BookingDTO>();
+            foreach (var booking in room.Bookings)
+            {
+                bookingsDTOs.Add(BookingDTO.MapToDTO(booking));
+            }
+
+            return new RoomDTO
+            {
+                Id = room.Id,
+                Name = room.Name,
+                Level = room.Level,
+                InMantainance = room.InMantainance,
+                Value = room.Price.Value,
+                Currency = room.Price.Currency,
+                Bookings = bookingsDTOs,
             };
         }
     }

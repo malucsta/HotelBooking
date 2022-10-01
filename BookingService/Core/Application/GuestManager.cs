@@ -28,7 +28,7 @@ namespace Application
                     Sucess = true,
                 };
             }
-            catch (InvalidDocumentException e)
+            catch (InvalidDocumentException)
             {
                 return new GuestResponse
                 {
@@ -37,7 +37,7 @@ namespace Application
                     Message = "Document Id is invalid",
                 };
             }
-            catch (MissingFieldsException e)
+            catch (MissingFieldsException)
             {
                 return new GuestResponse
                 {

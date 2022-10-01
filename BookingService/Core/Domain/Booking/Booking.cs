@@ -1,4 +1,7 @@
-﻿using Domain.Enums;
+﻿using Domain.Booking.Exceptions;
+using Domain.DomainExceptions;
+using Domain.Enums;
+using Domain.Ports;
 using Action = Domain.Enums.Action;
 
 namespace Domain.Entities
@@ -31,6 +34,50 @@ namespace Domain.Entities
         public Booking()
         {
             this.Status = Status.Created;
+            this.PlacedAt = DateTime.UtcNow;
+        }
+
+        public async Task Save(IBookingRepository repository)
+        {
+            this.ValidateState();
+
+            if (!this.Guest.IsValid())
+            {
+                throw new InvalidGuestException();
+            }
+
+            if (!this.Room.IsValid())
+            {
+                throw new RoomCannotBeBookedException();
+            }
+
+            if (this.Id == 0)
+            {
+                this.Id = await repository.CreateBooking(this);
+                this.Room.Bookings.Add(this);
+            }
+            else
+            {
+                //updates existing booking
+            }
+        }
+
+        private void ValidateState()
+        {
+            if (this.Room == null || this.Guest == null)
+            {
+                throw new MissingFieldsException();
+            }
+
+            if(this.Start <= DateTime.UtcNow || this.End <= DateTime.UtcNow)
+            {
+                throw new InvalidDateException("Date cannot be past");
+            }
+
+            if(this.End <= this.Start)
+            {
+                throw new InvalidPeriodException("End date should come after start date");
+            }
         }
     }
 }

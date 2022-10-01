@@ -13,6 +13,8 @@ namespace Domain.Entities
 
         public Price Price { get; set; }
 
+        public ICollection<Booking> Bookings { get; set; }
+
         public bool IsAvailable
         {
             get { return !InMantainance && !HasGuests; }
@@ -21,7 +23,27 @@ namespace Domain.Entities
         public bool HasGuests
         {
             //TODO: check if this room has open bookings 
-            get { return true; }
+            get
+            {
+                var notAvailableStatuses = new List<Enums.Status>
+                {
+                    Enums.Status.Created,
+                    Enums.Status.Paid,
+                };
+
+                if(this.Bookings != null)
+                {
+                    return this.Bookings.Where(
+                    //where booking roomID == roomID
+                    x => x.Room.Id == this.Id
+                    //booking current status != notAvailableStatuses
+                    ).Count() > 0;
+                } 
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         private void ValidateState()
@@ -40,6 +62,21 @@ namespace Domain.Entities
             if(Price.Value <= 0)
             {
                 throw new InvalidFieldException("price");
+            }
+        }
+
+        public bool IsValid()
+        {
+            try
+            {
+                this.ValidateState();
+
+                if(!this.IsAvailable) return false;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 

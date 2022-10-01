@@ -39,6 +39,12 @@ namespace Domain.Entities
             }
         }
 
+        public bool IsValid()
+        {
+            this.ValidateState();
+            return true;
+        }
+
         public async Task Save(IGuestRepository repository)
         {
             this.ValidateState(); 
@@ -51,6 +57,5 @@ namespace Domain.Entities
                 // updates existing guest
             }
         }
-
     }
 }

@@ -14,9 +14,8 @@ namespace Domain.Entities
         public DateTime End { get; set; }
         public Room Room { get; set; }
         public Guest Guest { get; set; }
-        private Status Status { get; set; }
-        public Status CurrentStatus { get { return Status; } }
-
+        public Status Status { get; private set; }
+        
         public void ChangeState(Action action)
         {
             Status = (this.Status, action) switch
@@ -26,6 +25,7 @@ namespace Domain.Entities
                 (Status.Paid,     Action.Finish)  => Status.Finished,
                 (Status.Paid,     Action.Refound) => Status.Refounded,
                 (Status.Canceled, Action.Reopen)  => Status.Created,
+                (_, Action.Mantain) => Status,
                 _ => Status
             };
 

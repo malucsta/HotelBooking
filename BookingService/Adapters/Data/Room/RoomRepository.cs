@@ -19,25 +19,50 @@ namespace Data.Room
             return room.Id;
         }
 
-        public Task<Entities.Room?> Get(int id)
+        public async Task<Entities.Room?> Get(int id)
         {
-            return _context.Rooms
+            var room = await _context.Rooms
                 .Where(x => x.Id == id)
-                .FirstOrDefaultAsync(); 
+                .FirstOrDefaultAsync();
+
+            if(room != null)
+                room.Bookings = new List<Entities.Booking>();
+            
+            return room;
         }
 
         public async Task<Entities.Room?> GetAggregate(int id)
         {
+            //retrives room data
             var room = await this.Get(id);
 
             if(room == null)
                 return null;
 
-            room.Bookings = await _context.Bookings
+            //retrives bookings for this specific room
+            var result = await _context.Bookings
                 .Include(x => x.Guest)
-                .Where(booking => booking.Room.Id == id)
+                .Select(booking => new RoomAggregateDTO
+                {
+                    Id = booking.Id,
+                    PlacedAt = booking.PlacedAt,
+                    Start = booking.Start,
+                    End = booking.End,
+                    RoomId = booking.Room.Id,
+                    GuestId = booking.Guest.Id,
+                })
+                .Where(booking => booking.RoomId == id)
                 .ToListAsync();
 
+            var bookingList = new List<Entities.Booking>();
+
+            foreach(RoomAggregateDTO booking in result)
+            {
+                bookingList.Add(RoomAggregateDTO.MapToEntity(booking));
+            }
+
+            room.Bookings = bookingList;
+            
             return room;
         }
     }

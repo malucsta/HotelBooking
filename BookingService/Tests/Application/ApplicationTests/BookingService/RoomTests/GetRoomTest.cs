@@ -33,6 +33,7 @@ namespace ApplicationTests.BookingService.RoomTests
             Assert.IsTrue(response.Sucess);
             Assert.AreEqual(id, response.Data.Id);
             Assert.AreEqual("Room's name", response.Data.Name);
+            Assert.AreEqual(new List<Booking>(), response.Data.Bookings);
         }
 
         [Test]

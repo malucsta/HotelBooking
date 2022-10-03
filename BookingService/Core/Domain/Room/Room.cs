@@ -13,7 +13,7 @@ namespace Domain.Entities
 
         public Price Price { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; }
+        public List<Booking> Bookings { get; set; }
 
         public bool IsAvailable
         {

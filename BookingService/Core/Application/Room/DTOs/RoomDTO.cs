@@ -17,7 +17,7 @@ namespace Application.Room.DTOs
 
         public AcceptedCurrencies Currency { get; set; }
 
-        public ICollection<BookingDTO>? Bookings { get; set; }
+        public List<BookingDTO>? Bookings { get; set; }
 
         public static Entities.Room MapToEntity(RoomDTO roomDTO)
         {
@@ -37,6 +37,12 @@ namespace Application.Room.DTOs
 
         public static RoomDTO MapToDTO(Entities.Room room)
         {
+            var bookingsDTOs = new List<BookingDTO>();
+            foreach (var booking in room.Bookings)
+            {
+                bookingsDTOs.Add(BookingDTO.MapToDTO(booking));
+            }
+
             return new RoomDTO
             {
                 Id = room.Id,
@@ -45,12 +51,13 @@ namespace Application.Room.DTOs
                 InMantainance = room.InMantainance,
                 Value = room.Price.Value,
                 Currency = room.Price.Currency,
+                Bookings = bookingsDTOs, 
             };
         }
 
         public static RoomDTO MapToAggregateDTO(Entities.Room room)
         {
-            ICollection<BookingDTO> bookingsDTOs = new List<BookingDTO>();
+            var bookingsDTOs = new List<BookingDTO>();
             foreach (var booking in room.Bookings)
             {
                 bookingsDTOs.Add(BookingDTO.MapToDTO(booking));

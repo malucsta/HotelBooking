@@ -13,6 +13,7 @@ namespace Application.Booking.DTOs
         public DateTime End { get; set; }
         public int RoomId { get; set; }
         public int GuestId { get; set; }
+        public int Status { get; set; }
 
         public BookingDTO()
         {
@@ -21,7 +22,7 @@ namespace Application.Booking.DTOs
 
         public static Entities.Booking MapToEntity(BookingDTO bookingDTO)
         {
-            return new Entities.Booking
+            var booking = new Entities.Booking
             {
                 Id = bookingDTO.Id,
                 PlacedAt = bookingDTO.PlacedAt,
@@ -30,6 +31,10 @@ namespace Application.Booking.DTOs
                 Room = new Entities.Room { Id = bookingDTO.RoomId },
                 Guest = new Entities.Guest { Id = bookingDTO.GuestId },
             };
+
+            booking.ChangeState(Domain.Enums.Action.Mantain);
+
+            return booking;
         }
 
         public static BookingDTO MapToDTO(Entities.Booking booking)
@@ -42,6 +47,7 @@ namespace Application.Booking.DTOs
                 End = booking.End.ToLocalTime(),
                 RoomId = booking.Room.Id,
                 GuestId = booking.Guest.Id,
+                Status = (int)booking.Status
             };
         }
     }

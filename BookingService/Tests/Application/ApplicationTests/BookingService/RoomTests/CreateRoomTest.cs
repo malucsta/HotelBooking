@@ -1,6 +1,8 @@
 ﻿using Application;
 using Application.Room.DTOs;
+using Application.Room.Ports;
 using Application.Room.Requests;
+using ApplicationTests.BookingService.BookingTests;
 using Domain.Entities;
 using Domain.Ports;
 using Moq;
@@ -12,13 +14,14 @@ namespace ApplicationTests.BookingService.RoomTests
 {
     public class CreateRoomTest
     {
-        private RoomManager _roomManager;
+        private IRoomManager _roomManager;
 
         [SetUp]
         public void Setup()
         {
-            var fakeRepository = new RoomFakeRepository();
-            _roomManager = new RoomManager(fakeRepository);
+            var fakeRoomRepository = new RoomFakeRepository();
+            var fakeBookingRepository = new BookingFakeRepository();
+            _roomManager = new RoomManager(fakeRoomRepository, fakeBookingRepository);
         }
 
         [Test] 
@@ -155,9 +158,10 @@ namespace ApplicationTests.BookingService.RoomTests
         public async Task ShouldCatchGenericExceptionWhenDataCannotBeStored()
         {
             var fakeRepository = new Mock<IRoomRepository>();
+            var fakeBookingRepository = new BookingFakeRepository();
             fakeRepository.Setup(x => x.Create(It.IsAny<Room>()))
                 .Throws(new Exception());
-            _roomManager = new RoomManager(fakeRepository.Object);
+            _roomManager = new RoomManager(fakeRepository.Object, fakeBookingRepository);
 
             var roomDTO = new RoomDTO
             {

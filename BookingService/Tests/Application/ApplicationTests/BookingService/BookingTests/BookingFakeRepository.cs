@@ -25,7 +25,24 @@ namespace ApplicationTests.BookingService.BookingTests
 
         public Task<List<Booking>> GetBookingsByRoom(int roomID)
         {
-            throw new NotImplementedException();
+            var booking = new Booking {
+                Id = 1,
+                PlacedAt = DateTime.UtcNow.ToLocalTime(),
+                Start = DateTime.UtcNow.AddDays(1).ToLocalTime(),
+                End = DateTime.UtcNow.AddDays(2).ToLocalTime(),
+                Room = new Room
+                {
+                    Id = roomID,
+                },
+                Guest = new Guest
+                {
+                    Id = 1,
+                },
+            };
+
+            var list = new List<Booking>(); 
+            list.Add(booking);  
+            return Task.FromResult(list); 
         }
     }
 }

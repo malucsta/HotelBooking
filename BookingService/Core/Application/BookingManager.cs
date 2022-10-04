@@ -136,7 +136,7 @@ namespace Application
                     {
                         Sucess = false,
                         ErrorCode = ErrorCode.BOOKING_NOT_FOUND,
-                        Message = "Unknown error occurred",
+                        Message = $"Booking with id {bookingID} does not exist",
                     };
                 }
 

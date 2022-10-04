@@ -64,7 +64,8 @@ namespace API.Controllers
 
             if (res.Sucess) { return Ok(res.Data); }
 
-            if (res.ErrorCode == Application.ErrorCode.ROOM_NOT_FOUND)
+            if (res.ErrorCode == Application.ErrorCode.ROOM_NOT_FOUND ||
+                res.ErrorCode == Application.ErrorCode.BOOKING_NOT_FOUND)
             {
                 NotFound(res);
             }

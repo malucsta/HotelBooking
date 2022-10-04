@@ -15,7 +15,7 @@ namespace ApplicationTests.BookingService.BookingTests
 {
     public class CreateBookingTest
     {
-        private BookingManager _bookingManager;
+        private IBookingManager _bookingManager;
 
         private BookingDTO bookingDTO = new BookingDTO
         {

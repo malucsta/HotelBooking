@@ -1,5 +1,6 @@
 ﻿using Application;
 using Application.Room.Ports;
+using ApplicationTests.BookingService.BookingTests;
 using Domain.Entities;
 using Domain.Ports;
 using Moq;
@@ -19,8 +20,9 @@ namespace ApplicationTests.BookingService.RoomTests
         [SetUp]
         public void Setup()
         {
-            var fakeRepository = new RoomFakeRepository();
-            roomManager = new RoomManager(fakeRepository);
+            var fakeRoomRepository = new RoomFakeRepository();
+            var fakeBookingRepository = new BookingFakeRepository();
+            roomManager = new RoomManager(fakeRoomRepository, fakeBookingRepository);
         }
 
         [Test]
@@ -42,9 +44,10 @@ namespace ApplicationTests.BookingService.RoomTests
             var id = 123;
 
             var fakeRepository = new Mock<IRoomRepository>();
+            var fakeBookingRepository = new BookingFakeRepository();
             fakeRepository.Setup(x => x.Get(It.IsAny<int>()))
                 .Returns(Task.FromResult<Room?>(null));
-            roomManager = new RoomManager(fakeRepository.Object);
+            roomManager = new RoomManager(fakeRepository.Object, fakeBookingRepository);
 
             var response = await roomManager.GetRoom(id);
 
@@ -61,9 +64,10 @@ namespace ApplicationTests.BookingService.RoomTests
             var id = 123;
 
             var fakeRepository = new Mock<IRoomRepository>();
+            var fakeBookingRepository = new BookingFakeRepository();
             fakeRepository.Setup(x => x.Get(It.IsAny<int>()))
                 .Throws(new Exception());
-            roomManager = new RoomManager(fakeRepository.Object);
+            roomManager = new RoomManager(fakeRepository.Object, fakeBookingRepository);
 
             var response = await roomManager.GetRoom(id);
 

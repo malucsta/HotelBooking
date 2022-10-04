@@ -18,11 +18,33 @@ namespace Data.Booking
             _context = context; 
         }
 
-        public async Task<List<Entities.Booking>> GetBookingsByRoom(int roomID)
+        public async Task<List<Entities.Booking>?> GetBookingsByRoom(int roomID)
         {
-            return await _context.Bookings
-                .Where(x => x.Room.Id == roomID)
+            var result = await _context.Bookings
+                .Include(x => x.Guest)
+                .Select(booking => new BookingDTO
+                {
+                    Id = booking.Id,
+                    PlacedAt = booking.PlacedAt,
+                    Start = booking.Start,
+                    End = booking.End,
+                    RoomId = booking.Room.Id,
+                    GuestId = booking.Guest.Id,
+                })
+                .Where(booking => booking.RoomId == roomID)
                 .ToListAsync();
+
+            if (result is null || result.Count == 0)
+                return null;
+
+            var bookingList = new List<Entities.Booking>();
+
+            foreach (BookingDTO booking in result)
+            {
+                bookingList.Add(BookingDTO.MapToEntity(booking));
+            }
+
+            return bookingList;
         }
 
         public async Task<int> CreateBooking(Entities.Booking booking)
@@ -34,15 +56,32 @@ namespace Data.Booking
 
         public async Task<Entities.Booking?> GetBooking(int id)
         {
-            return await _context.Bookings.Where(x => x.Id == id).FirstOrDefaultAsync(); 
+            var booking = await _context.Bookings
+                .Include(x => x.Guest)
+                .Select(booking => new BookingDTO
+                {
+                    Id = booking.Id,
+                    PlacedAt = booking.PlacedAt,
+                    Start = booking.Start,
+                    End = booking.End,
+                    RoomId = booking.Room.Id,
+                    GuestId = booking.Guest.Id,
+                })
+                .Where(booking => booking.Id == id)
+                .FirstOrDefaultAsync();
+
+            if(booking is not null)
+                return BookingDTO.MapToEntity(booking);
+
+            return null; 
         }
 
         public async Task<bool> CheckBookingsForPeriod(int roomID, DateTime start, DateTime end)
         {
             var bookings = await _context.Bookings
                  .Where(x => x.Room.Id == roomID && 
-                 x.Start.Date <= end.Date && 
-                 start.Date <= x.End.Date)
+                 x.Start.Date <= end.Date &&
+                 x.End.Date >= start.Date)
                  .ToListAsync();
 
             return bookings.Count > 0; 

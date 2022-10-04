@@ -4,16 +4,19 @@ using Application.Room.Requests;
 using Application.Room.Responses;
 using Domain.DomainExceptions;
 using Domain.Ports;
+using System.Text.Json;
 
 namespace Application
 {
     public class RoomManager : IRoomManager
     {
-        private readonly IRoomRepository _repository;
+        private readonly IRoomRepository _roomRepository;
+        private readonly IBookingRepository _bookingRepository;
 
-        public RoomManager(IRoomRepository repository)
+        public RoomManager(IRoomRepository roomRepository, IBookingRepository bookingRepository)
         {
-            _repository = repository;
+            _roomRepository = roomRepository;
+            _bookingRepository = bookingRepository;
         }
 
         public async Task<RoomResponse> CreateRoom(CreateRoomRequest request)
@@ -21,7 +24,7 @@ namespace Application
             try
             {
                 var room = RoomDTO.MapToEntity(request.Data);
-                await room.Save(_repository);
+                await room.Save(_roomRepository);
                 request.Data.Id = room.Id;
 
                 return new RoomResponse
@@ -63,7 +66,7 @@ namespace Application
         {
             try
             {
-                var room = await _repository.Get(roomID);
+                var room = await _roomRepository.Get(roomID);
 
                 if (room == null)
                 {
@@ -99,9 +102,9 @@ namespace Application
         {
             try
             {
-                var room = await _repository.GetAggregate(roomID);
+                var room = await _roomRepository.Get(roomID);
 
-                if (room == null)
+                if(room is null)
                 {
                     return new RoomResponse
                     {
@@ -110,7 +113,20 @@ namespace Application
                         Message = "This room does not exist"
                     };
                 }
+                
+                var bookingsByRoom = await _bookingRepository.GetBookingsByRoom(roomID);
 
+                if(bookingsByRoom is null)
+                {
+                    return new RoomResponse
+                    {
+                        Sucess = false,
+                        ErrorCode = ErrorCode.BOOKING_NOT_FOUND,
+                        Message = "This room does not have bookings"
+                    };
+                }
+
+                room.Bookings = bookingsByRoom;
                 var roomDTO = RoomDTO.MapToAggregateDTO(room);
 
                 return new RoomResponse

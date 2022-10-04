@@ -1,6 +1,7 @@
 ﻿using Application;
 using Application.Booking.DTOs;
 using Application.Room.DTOs;
+using ApplicationTests.BookingService.BookingTests;
 using Domain.Entities;
 using Domain.Ports;
 using Moq;
@@ -19,7 +20,8 @@ namespace ApplicationTests.BookingService.RoomTests
         public void Setup()
         {
             var fakeRepository = new RoomFakeRepository();
-            _roomManager = new RoomManager(fakeRepository);
+            var fakeBookingRepository = new BookingFakeRepository();
+            _roomManager = new RoomManager(fakeRepository, fakeBookingRepository);
         }
 
         [Test]
@@ -66,9 +68,10 @@ namespace ApplicationTests.BookingService.RoomTests
             var id = 1;
 
             var fakeRepository = new Mock<IRoomRepository>();
-            fakeRepository.Setup(x => x.GetAggregate(It.IsAny<int>()))
+            var fakeBookingRepository = new BookingFakeRepository();
+            fakeRepository.Setup(x => x.Get(It.IsAny<int>()))
                 .Returns(Task.FromResult<Room?>(null));
-            _roomManager = new RoomManager(fakeRepository.Object);
+            _roomManager = new RoomManager(fakeRepository.Object, fakeBookingRepository);
 
             var response = await _roomManager.GetRoomAggregate(id);
 
@@ -84,9 +87,10 @@ namespace ApplicationTests.BookingService.RoomTests
             var id = 1;
 
             var fakeRepository = new Mock<IRoomRepository>();
-            fakeRepository.Setup(x => x.GetAggregate(It.IsAny<int>()))
+            var fakeBookingRepository = new BookingFakeRepository();
+            fakeRepository.Setup(x => x.Get(It.IsAny<int>()))
                 .Throws(new Exception());
-            _roomManager = new RoomManager(fakeRepository.Object);
+            _roomManager = new RoomManager(fakeRepository.Object, fakeBookingRepository);
 
             var response = await _roomManager.GetRoomAggregate(id);
 

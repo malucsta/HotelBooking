@@ -3,7 +3,6 @@ using Domain.Enums;
 using Domain.ValueObjects;
 using Entities = Domain.Entities;
 
-
 namespace Application.Room.DTOs
 {
     public class RoomDTO

@@ -40,5 +40,20 @@ namespace API.Controllers
             _logger.LogError("Unknown error occurred", response);
             return StatusCode(500, response);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BookingResponse>> GetBooking(int id)
+        {
+            var response = await _bookingManager.GetBooking(id);
+            if (response.Sucess == true) return Ok(response.Data);
+
+            if (response.ErrorCode == Application.ErrorCode.BOOKING_NOT_FOUND)
+            {
+                return NotFound(response);
+            }
+
+            _logger.LogError("Unknown error occurred", response);
+            return StatusCode(500, response);
+        }
     }
 }

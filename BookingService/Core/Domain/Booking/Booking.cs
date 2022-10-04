@@ -41,11 +41,6 @@ namespace Domain.Entities
         {
             this.ValidateState();
 
-            if (!this.Guest.IsValid())
-            {
-                throw new InvalidGuestException();
-            }
-
             if (!this.Room.IsValid())
             {
                 throw new RoomCannotBeBookedException();

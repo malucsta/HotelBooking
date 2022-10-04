@@ -18,6 +18,7 @@
         ROOM_INVALID_FIELD = 105,
 
         //201 to 299 = booking errors 
+        BOOKING_NOT_FOUND = 201,
         BOOKING_INVALID_FIELD = 205,
         BOOKING_INVALID_GUEST = 206,
         BOOKING_ROOM_NOT_AVAILABLE = 207,

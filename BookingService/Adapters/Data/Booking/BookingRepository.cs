@@ -18,6 +18,13 @@ namespace Data.Booking
             _context = context; 
         }
 
+        public async Task<List<Entities.Booking>> GetBookingsByRoom(int roomID)
+        {
+            return await _context.Bookings
+                .Where(x => x.Room.Id == roomID)
+                .ToListAsync();
+        }
+
         public async Task<int> CreateBooking(Entities.Booking booking)
         {
             _context.Bookings.Add(booking);
@@ -28,6 +35,17 @@ namespace Data.Booking
         public async Task<Entities.Booking?> GetBooking(int id)
         {
             return await _context.Bookings.Where(x => x.Id == id).FirstOrDefaultAsync(); 
+        }
+
+        public async Task<bool> CheckBookingsForPeriod(int roomID, DateTime start, DateTime end)
+        {
+            var bookings = await _context.Bookings
+                 .Where(x => x.Room.Id == roomID && 
+                 x.Start.Date <= end.Date && 
+                 start.Date <= x.End.Date)
+                 .ToListAsync();
+
+            return bookings.Count > 0; 
         }
     }
 }

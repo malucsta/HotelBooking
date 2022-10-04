@@ -28,6 +28,22 @@ namespace Application
         {
             try
             {
+                var hasBookingsForPeriod = 
+                    await _bookingRepository.CheckBookingsForPeriod(
+                        request.Data.RoomId, 
+                        request.Data.Start, 
+                        request.Data.End);
+                
+                if(hasBookingsForPeriod)
+                {
+                    return new BookingResponse
+                    {
+                        Sucess = false,
+                        ErrorCode = ErrorCode.BOOKING_INVALID_FIELD,
+                        Message = "This room already has bookings for this period",
+                    };
+                }
+                
                 var booking = BookingDTO.MapToEntity(request.Data);
                 var guest = await _guestRepository.Get(request.Data.GuestId);
                 var room = await _roomRepository.Get(request.Data.RoomId);
@@ -58,16 +74,6 @@ namespace Application
             }
 
             catch (InvalidPeriodException e)
-            {
-                return new BookingResponse
-                {
-                    Sucess = false,
-                    ErrorCode = ErrorCode.BOOKING_INVALID_FIELD,
-                    Message = e.Message,
-                };
-            }
-
-            catch (InvalidGuestException e)
             {
                 return new BookingResponse
                 {
@@ -120,7 +126,36 @@ namespace Application
 
         public async Task<BookingResponse> GetBooking(int bookingID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var booking = await _bookingRepository.GetBooking(bookingID);
+
+                if(booking is null)
+                {
+                    return new BookingResponse
+                    {
+                        Sucess = false,
+                        ErrorCode = ErrorCode.BOOKING_NOT_FOUND,
+                        Message = "Unknown error occurred",
+                    };
+                }
+
+                return new BookingResponse
+                {
+                    Data = BookingDTO.MapToDTO(booking),
+                    Sucess = true,
+                };
+
+            }
+            catch(Exception)
+            {
+                return new BookingResponse
+                {
+                    Sucess = false,
+                    ErrorCode = ErrorCode.UNKNOWN_ERROR,
+                    Message = "Unknown error occurred",
+                };
+            }
         }
     }
 }

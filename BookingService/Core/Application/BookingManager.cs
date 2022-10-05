@@ -29,7 +29,7 @@ namespace Application
             try
             {
                 var hasBookingsForPeriod = 
-                    await _bookingRepository.CheckBookingsForPeriod(
+                    await _bookingRepository.CheckBookingsForRoomByPeriod(
                         request.Data.RoomId, 
                         request.Data.Start, 
                         request.Data.End);
@@ -114,6 +114,52 @@ namespace Application
             }
 
             catch (Exception)
+            {
+                return new BookingResponse
+                {
+                    Sucess = false,
+                    ErrorCode = ErrorCode.UNKNOWN_ERROR,
+                    Message = "Unknown error occurred",
+                };
+            }
+        }
+
+        public async Task<BookingResponse> DeleteBooking(int bookingID)
+        {
+            try
+            {
+                var booking = await _bookingRepository.GetBooking(bookingID);
+
+                if (booking is null)
+                {
+                    return new BookingResponse
+                    {
+                        Sucess = false,
+                        ErrorCode = ErrorCode.BOOKING_NOT_FOUND,
+                        Message = $"Booking with id {bookingID} does not exist",
+                    };
+                }
+
+                if (booking.Status != Domain.Enums.Status.Created)
+                {
+                    return new BookingResponse
+                    {
+                        Sucess = false,
+                        ErrorCode = ErrorCode.BOOKING_INVALID_OPERATION,
+                        Message = "This booking cannot be deleted",
+                    }; 
+                }
+
+                await _bookingRepository.DeleteBooking(booking);
+
+                return new BookingResponse
+                {
+                    Data = BookingDTO.MapToDTO(booking),
+                    Sucess = true,
+                };
+            }
+
+            catch(Exception)
             {
                 return new BookingResponse
                 {

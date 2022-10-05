@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationTests.BookingService.BookingTests
 {
-    public class GetBookingTest
+    public class DeleteBookingTest
     {
         private IBookingManager _bookingManager;
 
@@ -42,14 +42,13 @@ namespace ApplicationTests.BookingService.BookingTests
         }
 
         [Test]
-        public async Task ShouldReturnValidBooking()
+        public async Task ShouldDeleteBooking()
         {
-            var id = 123;
-            var response = await _bookingManager.GetBooking(id); 
-            
-            Assert.IsNotNull(response);
-            Assert.IsTrue(response.Sucess); 
-            Assert.AreEqual(response.Data.Id, bookingDTO.Id);
+            int id = 123;
+            var response = await _bookingManager.DeleteBooking(id);
+
+            Assert.IsTrue(response.Sucess);
+            Assert.AreEqual(response.Data.Id, bookingDTO.Id); 
             Assert.AreEqual(response.Data.RoomId, bookingDTO.RoomId);
             Assert.AreEqual(response.Data.GuestId, bookingDTO.GuestId);
         }
@@ -65,12 +64,47 @@ namespace ApplicationTests.BookingService.BookingTests
 
             _bookingManager = new BookingManager(bookingFakeRepository.Object, guestFakeRepository, roomFakeRepository);
 
-            var id = 123;
-            var response = await _bookingManager.GetBooking(id);
+            int id = 123;
+            var response = await _bookingManager.DeleteBooking(id);
 
-            Assert.IsNotNull(response);
             Assert.IsFalse(response.Sucess);
-            Assert.AreEqual(response.ErrorCode, ErrorCode.BOOKING_NOT_FOUND);
+            Assert.AreEqual(response.ErrorCode, ErrorCode.BOOKING_NOT_FOUND); 
+        }
+
+        [Test]
+        public async Task ShouldReturnInvalidOperationIfStatusIsOtherThanCreated()
+        {
+            var booking = new Booking
+            {
+                Id = 123,
+                PlacedAt = DateTime.Parse("2022-10-04T13:38:22.445Z"),
+                Start = DateTime.Parse("2022-10-10T13:38:22.445Z"),
+                End = DateTime.Parse("2022-10-12T13:38:22.445Z"),
+                Room = new Room
+                {
+                    Id = 3,
+                },
+                Guest = new Guest
+                {
+                    Id = 1,
+                }
+            };
+
+            booking.ChangeState(Domain.Enums.Action.Pay); 
+
+            var guestFakeRepository = new GuestFakeRepository();
+            var roomFakeRepository = new RoomFakeRepository();
+            var bookingFakeRepository = new Mock<IBookingRepository>();
+            bookingFakeRepository.Setup(x => x.GetBooking(It.IsAny<int>()))
+                .Returns(Task.FromResult<Booking?>(booking));
+
+            _bookingManager = new BookingManager(bookingFakeRepository.Object, guestFakeRepository, roomFakeRepository);
+
+            int id = 123;
+            var response = await _bookingManager.DeleteBooking(id);
+
+            Assert.IsFalse(response.Sucess);
+            Assert.AreEqual(response.ErrorCode, ErrorCode.BOOKING_INVALID_OPERATION);
         }
     }
 }

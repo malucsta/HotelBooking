@@ -55,5 +55,20 @@ namespace API.Controllers
             _logger.LogError("Unknown error occurred", response);
             return StatusCode(500, response);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<BookingResponse>> DeleteBooking(int id)
+        {
+            var response = await _bookingManager.DeleteBooking(id);
+            if (response.Sucess == true) return Ok(response.Data);
+
+            if (response.ErrorCode == Application.ErrorCode.BOOKING_NOT_FOUND)
+            {
+                return NotFound(response);
+            }
+
+            _logger.LogError("Unknown error occurred", response);
+            return StatusCode(500, response);
+        }
     }
 }

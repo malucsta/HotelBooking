@@ -57,7 +57,7 @@ namespace ApplicationTests.BookingService.BookingTests
             var guestFakeRepository = new GuestFakeRepository();
             var roomFakeRepository = new RoomFakeRepository();
             var bookingFakeRepository = new Mock<IBookingRepository>();
-            bookingFakeRepository.Setup(x => x.CheckBookingsForPeriod(
+            bookingFakeRepository.Setup(x => x.CheckBookingsForRoomByPeriod(
                 It.IsAny<int>(),
                 It.IsAny<DateTime>(),
                 It.IsAny<DateTime>()

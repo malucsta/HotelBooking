@@ -7,5 +7,6 @@ namespace Application.Booking.Ports
     {
         Task<BookingResponse> CreateBooking(CreateBookingRequest request);
         Task<BookingResponse> GetBooking(int bookingID);
+        Task<BookingResponse> DeleteBooking(int bookingID);
     }
 }

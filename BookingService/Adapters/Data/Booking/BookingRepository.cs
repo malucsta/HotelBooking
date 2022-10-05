@@ -76,7 +76,7 @@ namespace Data.Booking
             return null; 
         }
 
-        public async Task<bool> CheckBookingsForPeriod(int roomID, DateTime start, DateTime end)
+        public async Task<bool> CheckBookingsForRoomByPeriod(int roomID, DateTime start, DateTime end)
         {
             var bookings = await _context.Bookings
                  .Where(x => x.Room.Id == roomID && 
@@ -85,6 +85,12 @@ namespace Data.Booking
                  .ToListAsync();
 
             return bookings.Count > 0; 
+        }
+
+        public async Task DeleteBooking(Entities.Booking booking)
+        {
+            _context.Remove(booking);
+            await _context.SaveChangesAsync();
         }
     }
 }

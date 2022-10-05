@@ -8,7 +8,7 @@ namespace ApplicationTests.BookingService.BookingTests
 {
     public class BookingFakeRepository : IBookingRepository
     {
-        public Task<bool> CheckBookingsForPeriod(int roomID, DateTime start, DateTime end)
+        public Task<bool> CheckBookingsForRoomByPeriod(int roomID, DateTime start, DateTime end)
         {
             return Task.FromResult(false);
         }
@@ -18,10 +18,31 @@ namespace ApplicationTests.BookingService.BookingTests
             return Task.FromResult<int>(123);
         }
 
+        public Task DeleteBooking(Booking booking)
+        {
+            return Task.CompletedTask; 
+        }
+
         public Task<Booking?> GetBooking(int id)
         {
-            throw new NotImplementedException();
-        }
+            var booking = new Booking
+            {
+                Id = 123,
+                PlacedAt = DateTime.Parse("2022-10-04T13:38:22.445Z"),
+                Start = DateTime.Parse("2022-10-10T13:38:22.445Z"),
+                End = DateTime.Parse("2022-10-12T13:38:22.445Z"),
+                Room = new Room
+                {
+                    Id = 3,
+                },
+                Guest = new Guest
+                {
+                    Id = 1,
+                }
+            };
+
+            return Task.FromResult((Booking?) booking);
+    }
 
         public Task<List<Booking>> GetBookingsByRoom(int roomID)
         {

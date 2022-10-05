@@ -12,14 +12,14 @@ namespace Data.Room
             _context = context;
         }
 
-        public async Task<int> Create(Entities.Room room)
+        public async Task<int> CreateRoom(Entities.Room room)
         {
             _context.Add(room);
             await _context.SaveChangesAsync();
             return room.Id;
         }
 
-        public async Task<Entities.Room?> Get(int id)
+        public async Task<Entities.Room?> GetRoom(int id)
         {
             var room = await _context.Rooms
                 .Where(x => x.Id == id)
@@ -28,6 +28,20 @@ namespace Data.Room
             if(room != null)
                 room.Bookings = new List<Entities.Booking>();
             
+            return room;
+        }
+
+        public async Task<Entities.Room> ToggleMantainanceStatus(Entities.Room room)
+        {
+            _context.Entry(room).Property(x => x.InMantainance).IsModified = true;
+            await _context.SaveChangesAsync();
+            return room;
+        }
+
+        public async Task<Entities.Room> UpdateRoom(Entities.Room room)
+        {
+            _context.Update(room);
+            await _context.SaveChangesAsync();
             return room;
         }
     }

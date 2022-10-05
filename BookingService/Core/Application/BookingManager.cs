@@ -46,7 +46,7 @@ namespace Application
                 
                 var booking = BookingDTO.MapToEntity(request.Data);
                 var guest = await _guestRepository.Get(request.Data.GuestId);
-                var room = await _roomRepository.Get(request.Data.RoomId);
+                var room = await _roomRepository.GetRoom(request.Data.RoomId);
 
                 if (guest == null) throw new GuestNotFoundException();
                 if (room == null) throw new RoomNotFoundException(); 

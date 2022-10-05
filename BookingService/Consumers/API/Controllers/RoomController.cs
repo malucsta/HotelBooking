@@ -41,6 +41,22 @@ namespace API.Controllers
             return StatusCode(500, res);
         }
 
+        [HttpPost("/toggle-mantainance/{id}")]
+        public async Task<ActionResult<RoomDTO>> ToggleMantainance(int id)
+        {
+            var res = await _roomManager.ToggleMantainanceStatus(id);
+
+            if (res.Sucess) return Ok(res.Data);
+
+            if (res.ErrorCode == Application.ErrorCode.ROOM_NOT_FOUND)
+            {
+                return BadRequest(res);
+            }
+
+            _logger.LogError("Unknown error occurred", res);
+            return StatusCode(500, res);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {

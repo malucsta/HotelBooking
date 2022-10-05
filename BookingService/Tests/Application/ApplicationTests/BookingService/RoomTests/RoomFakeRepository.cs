@@ -8,12 +8,12 @@ namespace ApplicationTests.BookingService.RoomTests
 {
     public class RoomFakeRepository : IRoomRepository
     {
-        public Task<int> Create(Room room)
+        public Task<int> CreateRoom(Room room)
         {
             return Task.FromResult(123);
         }
 
-        public Task<Room?> Get(int id)
+        public Task<Room?> GetRoom(int id)
         {
             return Task.FromResult<Room?>(new Room
             {
@@ -67,6 +67,17 @@ namespace ApplicationTests.BookingService.RoomTests
             };
 
             return Task.FromResult<Room?>(roomAggregate);
+        }
+
+        public Task<Room> UpdateRoom(Room room)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Room> ToggleMantainanceStatus(Room room)
+        {
+            room.InMantainance = !room.InMantainance;
+            return Task.FromResult(room);
         }
     }
 }

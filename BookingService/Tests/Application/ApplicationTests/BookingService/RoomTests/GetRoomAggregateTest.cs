@@ -69,7 +69,7 @@ namespace ApplicationTests.BookingService.RoomTests
 
             var fakeRepository = new Mock<IRoomRepository>();
             var fakeBookingRepository = new BookingFakeRepository();
-            fakeRepository.Setup(x => x.Get(It.IsAny<int>()))
+            fakeRepository.Setup(x => x.GetRoom(It.IsAny<int>()))
                 .Returns(Task.FromResult<Room?>(null));
             _roomManager = new RoomManager(fakeRepository.Object, fakeBookingRepository);
 
@@ -88,7 +88,7 @@ namespace ApplicationTests.BookingService.RoomTests
 
             var fakeRepository = new Mock<IRoomRepository>();
             var fakeBookingRepository = new BookingFakeRepository();
-            fakeRepository.Setup(x => x.Get(It.IsAny<int>()))
+            fakeRepository.Setup(x => x.GetRoom(It.IsAny<int>()))
                 .Throws(new Exception());
             _roomManager = new RoomManager(fakeRepository.Object, fakeBookingRepository);
 

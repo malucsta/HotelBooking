@@ -86,7 +86,7 @@ namespace Domain.Entities
             
             if(this.Id == 0)
             {
-                this.Id = await repository.Create(this);
+                this.Id = await repository.CreateRoom(this);
             } 
             else
             {

@@ -66,7 +66,7 @@ namespace Application
         {
             try
             {
-                var room = await _roomRepository.Get(roomID);
+                var room = await _roomRepository.GetRoom(roomID);
 
                 if (room == null)
                 {
@@ -102,7 +102,7 @@ namespace Application
         {
             try
             {
-                var room = await _roomRepository.Get(roomID);
+                var room = await _roomRepository.GetRoom(roomID);
 
                 if(room is null)
                 {
@@ -137,6 +137,42 @@ namespace Application
             }
 
             catch (Exception e)
+            {
+                return new RoomResponse
+                {
+                    Sucess = false,
+                    ErrorCode = ErrorCode.UNKNOWN_ERROR,
+                    Message = "Something went wrong while trying to comunicate with database"
+                };
+            }
+        }
+
+        public async Task<RoomResponse> ToggleMantainanceStatus(int roomID)
+        {
+            try
+            {
+                var room = await _roomRepository.GetRoom(roomID);
+
+                if (room is null)
+                {
+                    return new RoomResponse
+                    {
+                        Sucess = false,
+                        ErrorCode = ErrorCode.ROOM_NOT_FOUND,
+                        Message = "This room does not exist"
+                    };
+                }
+
+                room.InMantainance = !room.InMantainance;
+                var updatedRoom = await _roomRepository.ToggleMantainanceStatus(room);
+
+                return new RoomResponse
+                {
+                    Sucess = true,
+                    Data = RoomDTO.MapToDTO(updatedRoom),
+                };
+            }
+            catch (Exception)
             {
                 return new RoomResponse
                 {

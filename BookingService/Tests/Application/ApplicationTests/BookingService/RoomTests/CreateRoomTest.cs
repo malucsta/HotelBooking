@@ -159,7 +159,7 @@ namespace ApplicationTests.BookingService.RoomTests
         {
             var fakeRepository = new Mock<IRoomRepository>();
             var fakeBookingRepository = new BookingFakeRepository();
-            fakeRepository.Setup(x => x.Create(It.IsAny<Room>()))
+            fakeRepository.Setup(x => x.CreateRoom(It.IsAny<Room>()))
                 .Throws(new Exception());
             _roomManager = new RoomManager(fakeRepository.Object, fakeBookingRepository);
 

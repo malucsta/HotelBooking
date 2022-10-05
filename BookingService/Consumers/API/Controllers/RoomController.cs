@@ -41,7 +41,7 @@ namespace API.Controllers
             return StatusCode(500, res);
         }
 
-        [HttpPost("/toggle-mantainance/{id}")]
+        [HttpPatch("/toggle-mantainance/{id}")]
         public async Task<ActionResult<RoomDTO>> ToggleMantainance(int id)
         {
             var res = await _roomManager.ToggleMantainanceStatus(id);

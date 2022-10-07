@@ -17,6 +17,7 @@
         ROOM_COULD_NOT_STORE_DATA = 102,
         ROOM_MISSING_REQUIRED_INFORMATION = 104,
         ROOM_INVALID_FIELD = 105,
+        ROOM_INVALID_OPERATION = 199,
 
         //201 to 299 = booking errors 
         BOOKING_NOT_FOUND = 201,

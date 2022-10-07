@@ -19,6 +19,13 @@ namespace Data.Room
             return room.Id;
         }
 
+        public async Task<int> DeleteRoom(Entities.Room room)
+        {
+            _context.Remove(room);
+            await _context.SaveChangesAsync();
+            return room.Id;
+        }
+
         public async Task<Entities.Room?> GetRoom(int id)
         {
             var room = await _context.Rooms

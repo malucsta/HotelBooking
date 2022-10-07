@@ -66,7 +66,7 @@ namespace API.Controllers
 
             if (res.ErrorCode == Application.ErrorCode.ROOM_NOT_FOUND)
             {
-                NotFound(res);
+                return NotFound(res);
             }
 
             _logger.LogError("Unknown error occurred", res);
@@ -83,7 +83,28 @@ namespace API.Controllers
             if (res.ErrorCode == Application.ErrorCode.ROOM_NOT_FOUND ||
                 res.ErrorCode == Application.ErrorCode.BOOKING_NOT_FOUND)
             {
-                NotFound(res);
+                return NotFound(res);
+            }
+
+            _logger.LogError("Unknown error occurred", res);
+            return StatusCode(500, res);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<RoomDTO>> DeleteRoom(int id)
+        {
+            var res = await _roomManager.DeleteRoom(id);
+
+            if (res.Sucess) { return Ok(res.Data); }
+
+            if (res.ErrorCode == Application.ErrorCode.ROOM_NOT_FOUND)
+            {
+                return NotFound(res);
+            }
+
+            if (res.ErrorCode == Application.ErrorCode.ROOM_INVALID_OPERATION)
+            {
+                return BadRequest(res);
             }
 
             _logger.LogError("Unknown error occurred", res);

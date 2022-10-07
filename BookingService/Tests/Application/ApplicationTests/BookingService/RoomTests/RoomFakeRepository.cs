@@ -79,5 +79,10 @@ namespace ApplicationTests.BookingService.RoomTests
             room.InMantainance = !room.InMantainance;
             return Task.FromResult(room);
         }
+
+        public Task<int> DeleteRoom(Room room)
+        {
+            return Task.FromResult(room.Id);
+        }
     }
 }

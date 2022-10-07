@@ -62,6 +62,52 @@ namespace Application
             }
         }
 
+        public async Task<RoomResponse> DeleteRoom(int roomID)
+        {
+            try
+            {
+                var room = await _roomRepository.GetRoom(roomID);
+
+                if (room is null)
+                {
+                    return new RoomResponse
+                    {
+                        Sucess = false,
+                        ErrorCode = ErrorCode.ROOM_NOT_FOUND,
+                        Message = "This room does not exist"
+                    };
+                }
+
+                if (await _bookingRepository.CheckBookingsForRoom(roomID))
+                {
+                    return new RoomResponse
+                    {
+                        Sucess = false,
+                        ErrorCode = ErrorCode.ROOM_INVALID_OPERATION,
+                        Message = "This room cannot be deleted. Motive: it has bookings"
+                    };
+                }
+
+                room.Id = await _roomRepository.DeleteRoom(room);
+                var roomDTO = RoomDTO.MapToDTO(room);
+
+                return new RoomResponse
+                {
+                    Sucess = true,
+                    Data = roomDTO,
+                };
+            }
+            catch(Exception)
+            {
+                return new RoomResponse
+                {
+                    Sucess = false,
+                    ErrorCode = ErrorCode.UNKNOWN_ERROR,
+                    Message = "Something went wrong while trying to comunicate with database"
+                };
+            }
+        }
+
         public async Task<RoomResponse> GetRoom(int roomID)
         {
             try

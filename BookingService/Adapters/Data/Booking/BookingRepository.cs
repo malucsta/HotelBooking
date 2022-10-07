@@ -92,5 +92,14 @@ namespace Data.Booking
             _context.Remove(booking);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> CheckBookingsForRoom(int roomID)
+        {
+            var bookings = await _context.Bookings
+                .Where(x => x.Room.Id == roomID)
+                .ToListAsync();
+
+            return bookings.Count > 0; 
+        }
     }
 }

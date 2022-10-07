@@ -8,6 +8,11 @@ namespace ApplicationTests.BookingService.BookingTests
 {
     public class BookingFakeRepository : IBookingRepository
     {
+        public Task<bool> CheckBookingsForRoom(int roomID)
+        {
+            return Task.FromResult(false);
+        }
+
         public Task<bool> CheckBookingsForRoomByPeriod(int roomID, DateTime start, DateTime end)
         {
             return Task.FromResult(false);

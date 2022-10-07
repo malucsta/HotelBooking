@@ -8,6 +8,7 @@ namespace Domain.Ports
         Task<int> CreateRoom (Room room);
         Task<Room> UpdateRoom (Room room);
         Task<Room> ToggleMantainanceStatus(Room room);
+        Task<int> DeleteRoom (Room room);
 
     }
 }

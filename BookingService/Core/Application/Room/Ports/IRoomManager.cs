@@ -10,5 +10,6 @@ namespace Application.Room.Ports
         Task<RoomResponse> GetRoom(int roomID);
         Task<RoomResponse> GetRoomAggregate(int roomID);
         Task<RoomResponse> ToggleMantainanceStatus(int roomID);
+        Task<RoomResponse> DeleteRoom(int roomID);  
     }
 }

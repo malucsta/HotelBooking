@@ -10,6 +10,7 @@
         INVALID_PERSON_ID = 3,
         MISSING_REQUIRED_INFORMATION = 4,
         INVALID_FIELD = 5,
+        INVALID_OPERATION = 99,
 
         // 101 to 199 = room errors 
         ROOM_NOT_FOUND = 101,

@@ -66,6 +66,28 @@ namespace API.Controllers
 
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<GuestDTO>> DeleteGuest(int id)
+        {
+            var res = await _guestManager.DeleteGuest(id);
+
+            if (res.Sucess) return Ok(res.Data);
+
+            if (res.ErrorCode == Application.ErrorCode.NOT_FOUND)
+            {
+                return NotFound(res);
+            }
+
+            if (res.ErrorCode == Application.ErrorCode.INVALID_OPERATION)
+            {
+                return BadRequest(res);
+            }
+
+            _logger.LogError("Unknown error occurred", res);
+            return StatusCode(500, res);
+
+        }
+
 
     }
 }

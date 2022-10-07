@@ -66,11 +66,46 @@ namespace Application
             }
         }
 
+        public async Task<GuestResponse> DeleteGuest(int guestID)
+        {
+            var guest = await _repository.Get(guestID);
+            
+            if(guest is null)
+            {
+                return new GuestResponse
+                {
+                    Sucess = false,
+                    ErrorCode = ErrorCode.NOT_FOUND,
+                    Message = "This guest doesn't exist",
+                };
+            }
+
+            if(await _repository.CheckBookingsForGuest(guestID))
+            {
+                //guest could have an "active" attribute so it could be deactivated instead of deleted
+               
+                return new GuestResponse
+                {
+                    Sucess = false,
+                    ErrorCode = ErrorCode.INVALID_OPERATION,
+                    Message = "This guest cannot be deleted. Motive: open bookings",
+                };
+            }
+
+            guest.Id = await _repository.Delete(guest);
+            
+            return new GuestResponse
+            {
+                Data = GuestDTO.MapToDTO(guest),
+                Sucess = true,
+            };
+        }
+
         public async Task<GuestResponse> GetGuest(int guestID)
         {
             var guest = await _repository.Get(guestID);
 
-            if(guest == null)
+            if(guest is null)
             {
                 return new GuestResponse
                 {

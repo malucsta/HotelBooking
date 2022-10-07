@@ -8,5 +8,6 @@ namespace Application.Guest.Ports
         Task<GuestResponse> CreateGuest(CreateGuestRequest request);
 
         Task<GuestResponse> GetGuest(int guestID);
+        Task<GuestResponse> DeleteGuest(int guestID);
     }
 }

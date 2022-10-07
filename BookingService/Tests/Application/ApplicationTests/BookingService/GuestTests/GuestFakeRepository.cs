@@ -7,9 +7,19 @@ namespace ApplicationTests.BookingService.GuestTests
 {
     public class GuestFakeRepository : IGuestRepository
     {
+        public Task<bool> CheckBookingsForGuest(int id)
+        {
+            return Task.FromResult(false);
+        }
+
         public Task<int> Create(Guest guest)
         {
             return Task.FromResult(123);
+        }
+
+        public Task<int> Delete(Guest guest)
+        {
+            return Task.FromResult(guest.Id);
         }
 
         public Task<Guest> Get(int id)
